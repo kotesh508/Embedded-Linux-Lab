@@ -1,0 +1,27 @@
+# Build files
+*.o
+*.ko
+*.mod
+*.cmd
+*.tmp
+
+# Archives
+*.zip
+*.tar.gz
+*.gz
+
+# Logs
+*.log
+
+# Build directories
+build/
+tmp/
+downloads/
+deploy/
+
+# Editor
+.vscode/
+.idea/
+
+# Cache
+.cache/
