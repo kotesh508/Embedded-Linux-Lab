@@ -46,6 +46,6 @@ Every `Issue_NN_*.md` file follows:
 - Workflow: `devtool modify` → `devtool build` → verify → `devtool finish` → patch added to layer recipe
 
 ## About
+Maintained by Kotesh as a personal Embedded Linux engineering lab focused on Linux kernel exploration, BSP development, and practical debugging.
 
-Maintained by Kotesh as part of Embedded Linux / BSP Engineer interview preparation.
-Issues are added continuously as new debugging scenarios are practiced.
+This repository is continuously updated with new experiments, debugging notes, device driver investigations, and embedded Linux workflows developed through continuous hands-on learning.
