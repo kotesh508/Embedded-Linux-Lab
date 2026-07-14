@@ -138,12 +138,6 @@ if (irq < 0 && irq != -ENXIO)
 
 ---
 
-## 🧠 Interview Explanation
-
-> Probe deferral is a Linux kernel mechanism where a driver's `probe()` function returns `-EPROBE_DEFER` to indicate that a required resource or dependency is not yet available. The kernel adds the device to a deferred probe list and retries probe after other devices finish initializing. Common causes include: a clock provider not yet registered, a regulator not yet available, a GPIO controller not yet probed, or an interrupt controller dependency not resolved. You can identify probe deferral by checking `/sys/kernel/debug/devices_deferred` — it shows each deferred device and the reason. The fix is either to ensure the supplier initializes first (using `initcall` ordering or `depends-on` in DTS), or to handle `-EPROBE_DEFER` explicitly in the driver.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

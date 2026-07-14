@@ -143,12 +143,6 @@ if (!ptr) {
 
 ---
 
-## 🧠 Interview Explanation
-
-> `WARN_ON` and `BUG_ON` are kernel assertion macros. `WARN_ON(condition)` fires when the condition is true — it prints a warning message with the source file, line number, and call trace, then allows execution to continue. `BUG_ON(condition)` also fires when the condition is true but causes a hard kernel panic — execution stops immediately. In the dmesg output, WARN_ON is identified by `------------[ cut here ]------------` followed by `WARNING:`, while BUG_ON produces `kernel BUG at <file>:<line>!`. The source file and line number are printed directly, making these the easiest panics to debug. In driver development, prefer returning error codes over `BUG_ON` for recoverable conditions, and use `WARN_ON` to flag unexpected states that shouldn't stop the system.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

@@ -164,12 +164,6 @@ if (!res)
 
 ---
 
-## 🧠 Interview Explanation
-
-> A NULL pointer dereference occurs when kernel code tries to read or write through a pointer that is NULL (address 0x0). In Linux on ARM64, virtual address 0 is never mapped, so the MMU raises a Data Abort exception which the kernel reports as "Unable to handle kernel NULL pointer dereference". The panic message shows the faulting PC (exact function and offset), the call trace (how execution reached that point), and the register dump (which register held NULL). The key fields to read are: the virtual address (confirms NULL), the PC line (identifies the exact function), and the call trace (shows the execution path). The fix is always to validate pointers before use and return an appropriate error code if they are NULL.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

@@ -258,25 +258,6 @@ perf stat -e alignment-faults ./your_driver_test
 
 ---
 
-## 🧠 Interview Explanation
-
-> Unaligned memory access occurs when a multi-byte value is read from or
-> written to an address not aligned to its natural size — for example reading
-> a 4-byte u32 from an odd address. On ARM64, Linux boots with hardware
-> alignment fixup enabled (SCTLR_EL1.A=0), so unaligned accesses are
-> transparently handled by the CPU without faulting, but at a performance cost
-> and with potential for subtle data corruption as we saw — the read value
-> was wrong. On architectures like MIPS or strict ARM32 configurations, the
-> same access would cause a SIGBUS. In BSP driver development the most
-> common bad pointer scenarios are: accessing physical MMIO addresses directly
-> without ioremap (must always use devm_ioremap_resource), using ERR_PTR
-> values without checking IS_ERR first, and DMA buffers that are not
-> cache-line aligned causing data corruption. The correct pattern for MMIO
-> is always readl/writel which guarantee alignment, ordering, and portability
-> across all architectures.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

@@ -162,12 +162,6 @@ kotesh-sensor@20010000 {
 
 ---
 
-## 🧠 Interview Explanation
-
-After fixing the compatible string typo, the driver still doesn't probe on the host x86 kernel because the ThinkPad uses ACPI-based platform devices, not Device Tree. The `/proc/device-tree/` directory doesn't exist on x86 systems. Platform drivers with `of_match_table` require an ARM-based system with a DTB passed by the bootloader. To fully verify the fix, a matching DTS node must be added to the QEMU `qemu-virt.dts` and the system must be booted with the updated DTB — covered in Exercise 3.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

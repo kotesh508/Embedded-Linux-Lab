@@ -110,12 +110,6 @@ kotesh-dummy
 
 ---
 
-## 🧠 Interview Explanation
-
-> In the Linux Device Tree, the `status` property controls whether the kernel treats a node as active hardware. A value of `"okay"` tells the kernel to register the device on the platform bus and match it to a driver. A value of `"disabled"` causes the kernel to skip the node entirely during boot — no platform device is created, so the driver's `probe()` is never called even if the module is loaded and the `compatible` string matches. This is commonly used in BSPs to ship a single DTS for a board family and selectively enable only the peripherals present on each variant using overlays or board-specific `.dtsi` files.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

@@ -148,12 +148,6 @@ buf_size = total_size / num_channels;
 
 ---
 
-## 🧠 Interview Explanation
-
-> On ARM64, integer divide by zero does not trigger a hardware CPU exception like on x86. Instead, the GCC compiler inserts a runtime check before each division — if the divisor is zero, a `BRK` (breakpoint) instruction fires. The kernel reports this as "Unexpected kernel BRK exception at EL1" with BRK handler code `f20003e8`. This is different from x86 which shows "divide error: 0000". The faulting instruction in the Code line will be `d4207d00` which is `BRK #0x3e80`. The PC line shows exactly which function and offset caused it. The fix is to always validate that the divisor is non-zero before performing integer division, especially when the divisor comes from hardware registers, DT properties, or user-provided values.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

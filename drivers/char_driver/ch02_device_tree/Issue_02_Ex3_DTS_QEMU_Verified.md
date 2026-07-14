@@ -274,12 +274,6 @@ linux-qemuarm64-standard-build
 
 ---
 
-## 🧠 Interview Explanation
-
-A DTS compatible string mismatch silently prevents probe() from being called — no error, no warning. The fix requires three things to align: the driver's `of_match_table` compatible string must exactly match the DTS node's compatible property, the system must be DTS-based (ARM64 with DTB, not x86 ACPI), and the module must be cross-compiled for the correct architecture. On a ThinkPad x86 host, platform drivers with `of_match_table` will never probe because the host uses ACPI not Device Tree. The complete fix was verified on QEMU ARM64 where probe() was called, the device symlink appeared in `/sys/bus/platform/drivers/sensor_dts/`, and remove() was called cleanly on unload.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

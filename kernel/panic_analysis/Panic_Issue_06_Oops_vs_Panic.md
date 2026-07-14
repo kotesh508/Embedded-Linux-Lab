@@ -225,21 +225,6 @@ thread, etc.) the oops would have been more likely to panic even without
 
 ---
 
-## 🧠 Interview Explanation
-
-> A Kernel Oops is a non-fatal kernel error — the kernel detects a fault (like
-> a NULL pointer dereference), prints registers and a call trace, kills the
-> offending process, and continues running. By default `panic_on_oops=0` so the
-> system survives. Setting `panic_on_oops=1` converts any Oops into a hard
-> Kernel Panic — the system halts and must be rebooted. In production BSP work,
-> `panic_on_oops=1` is often combined with `panic_timeout=N` so the system
-> auto-reboots via watchdog after a fatal error. The `sysrq` interface is useful
-> for testing panic behavior — `echo c > /proc/sysrq-trigger` forces an
-> immediate kernel crash in kernel context, bypassing the userspace process
-> protection that can let an Oops survive.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

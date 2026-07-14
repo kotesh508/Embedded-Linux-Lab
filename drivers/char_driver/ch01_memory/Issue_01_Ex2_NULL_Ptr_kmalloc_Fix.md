@@ -168,12 +168,6 @@ These are real mistakes — documenting them helps remember the patterns.
 
 ---
 
-## 🧠 Interview Explanation
-
-The fix allocates memory with `kmalloc` before the pointer is used, checks the return value for NULL, and frees the memory in the exit function with `kfree`. The critical rule is order — allocate first, check NULL, then use. Setting the pointer to NULL after `kfree` prevents use-after-free. The timer must be cancelled before `kfree` to prevent the callback from accessing freed memory after it is freed.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

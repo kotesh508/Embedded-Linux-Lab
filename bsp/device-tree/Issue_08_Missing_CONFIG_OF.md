@@ -149,12 +149,6 @@ root@qemuarm64:~# dmesg | grep -i "KOTESH_OF"
 
 ---
 
-## 🧠 Interview Explanation
-
-> `CONFIG_OF` enables Device Tree support in the Linux kernel. When enabled, drivers use `of_match_table` inside `platform_driver.driver` to declare which DT `compatible` strings they handle. The kernel matches this table against the `compatible` property of DT nodes to call the driver's `probe()`. If `of_match_table` is missing — either because `CONFIG_OF` is disabled or the developer forgot to add it — the kernel cannot perform DT-based matching. The driver registers successfully and the device is created, but they are never bound and probe is never called. There are no error messages, making this a silent failure that is easy to miss. The fix is to add `of_match_table` with the correct compatible string and include `<linux/of.h>`.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

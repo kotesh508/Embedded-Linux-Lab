@@ -217,25 +217,6 @@ Fix: use `devm_kmalloc` or set `data = NULL` after error-path free.
 
 ---
 
-## 🧠 Interview Explanation
-
-> A double free occurs when `kfree()` is called twice on the same pointer.
-> The first `kfree()` returns the chunk to SLUB's free list and writes the
-> poison value `dead000000000100` into it. The second `kfree()` corrupts the
-> free list by inserting the same chunk twice. Subsequent allocations anywhere
-> in the kernel may receive the corrupted chunk, and when the kernel tries to
-> follow its next pointer it gets `dead000000000100` as an address, causing a
-> NULL dereference at offset 0x8. This triggers a cascade of Oops across
-> completely unrelated kernel threads — in our case corrupting 9 different
-> contexts including the EXT4 journal thread. The crash location has no
-> relation to the actual double free bug. The smoking gun in the register dump
-> is `x4: dead000000000100` — SLUB's LIST_POISON2 magic value. The fix is to
-> always set pointers to NULL after `kfree()` since `kfree(NULL)` is a safe
-> no-op, or better yet use `devm_kmalloc()` for driver allocations which are
-> managed automatically.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

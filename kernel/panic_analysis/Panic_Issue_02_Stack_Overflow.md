@@ -146,12 +146,6 @@ static void iterative_traverse(int count)
 
 ---
 
-## 🧠 Interview Explanation
-
-> Kernel stack overflow occurs when a kernel thread exhausts its stack space, typically due to infinite or excessively deep recursion. On ARM64, the kernel stack is 16KB per thread. Each function call consumes stack space for saved registers, frame pointer, and local variables. When the stack pointer crosses the bottom of the stack into the guard page, the ARM64 hardware raises a Data Abort. The kernel detects this as "Insufficient stack space to handle exception" and panics with "kernel stack overflow". Unlike a NULL pointer dereference which may produce only an Oops, stack overflow always causes a hard panic with no recovery. The stack layout in the panic message shows the task stack range and the SP value — if SP is near the bottom of the task stack range, it confirms overflow. The fix is to always have a base case in recursive functions or convert deep recursion to iteration.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

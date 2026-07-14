@@ -247,25 +247,6 @@ if (si_mem_available() < (size >> PAGE_SHIFT)) {
 
 ---
 
-## 🧠 Interview Explanation
-
-> Out of Memory occurs when the kernel exhausts all available RAM and swap and
-> cannot reclaim enough through page cache eviction. There are two OOM
-> scenarios: a page allocation failure where a large contiguous allocation fails
-> but the system continues (kmalloc returns NULL), and a full OOM where the OOM
-> killer fires, selects the highest-scoring process by RSS size, kills it, and
-> reclaims its memory. In our lab we exhausted 945 MB of 985 MB total RAM
-> through unreclaimable slab allocations, triggering a page allocation failure
-> for order:8 (1MB contiguous) but not a full OOM kill because the probe()
-> function returned after kmalloc failed, releasing pressure. The key diagnostic
-> is `Slab: ~987MB` and `SUnreclaim: ~978MB` in /proc/meminfo — almost all RAM
-> consumed by unreclaimable kernel slab. In BSP driver development, always use
-> `devm_kmalloc()` for allocations so they are automatically freed on device
-> removal, always handle NULL returns from kmalloc, and for production embedded
-> systems set `panic_on_oom=2` with a watchdog timeout for automatic recovery.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

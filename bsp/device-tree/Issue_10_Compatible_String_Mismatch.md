@@ -141,12 +141,6 @@ kotesh-multi@20005000 {
 
 ---
 
-## 🧠 Interview Explanation
-
-> When two kernel drivers declare the same `compatible` string in their `of_match_table`, both register on the platform bus but only the first one to register gets to probe the device. The second driver silently never probes. This is a common issue in BSP development when a vendor tree has both an upstream driver and a custom vendor driver claiming the same hardware. The kernel does not report an error — it just silently uses the first driver. Diagnosis involves checking `/sys/bus/platform/devices/<dev>/driver` to see which driver won, and `dmesg` to see which probe was called. The fix is to either remove the duplicate driver, use unique compatible strings per hardware revision, or use a compatible string list in DTS to select the preferred driver.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

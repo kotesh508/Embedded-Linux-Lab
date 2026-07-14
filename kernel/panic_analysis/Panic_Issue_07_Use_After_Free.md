@@ -196,24 +196,6 @@ if (!data)
 
 ---
 
-## 🧠 Interview Explanation
-
-> Use-After-Free is one of the most dangerous kernel bugs because it causes
-> silent memory corruption without any immediate crash. After `kfree()`, the
-> SLUB allocator reclaims the memory and may overwrite it with its own metadata
-> or reallocate it to another object. If the original pointer is accessed again,
-> reads return corrupted data and writes silently corrupt the heap — potentially
-> corrupting a completely different kernel object. The bug may not manifest as
-> a crash until much later in unrelated code, making it extremely hard to debug.
-> The correct tool is KASAN (Kernel Address Sanitizer), which instruments every
-> memory access and immediately reports UAF with full allocation and free
-> backtraces. In BSP driver development, the best prevention is using `devm_`
-> allocations which are automatically managed, and always setting pointers to
-> NULL after `kfree()` so any subsequent access causes an immediate visible
-> NULL pointer Oops rather than silent corruption.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

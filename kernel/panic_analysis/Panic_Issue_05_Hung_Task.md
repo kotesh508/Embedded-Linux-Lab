@@ -171,12 +171,6 @@ static int kotesh_hungtask_probe(struct platform_device *pdev)
 
 ---
 
-## 🧠 Interview Explanation
-
-> A hung task occurs when a kernel thread stays blocked or in an infinite sleep loop for longer than `hung_task_timeout_secs` (default 120s). The kernel's `khungtaskd` daemon monitors for threads in uninterruptible sleep (`D` state) or repeatedly sleeping without making progress. When detected, it prints `INFO: task <name> blocked for more than N seconds` with a call trace showing where the thread is stuck. This is different from a soft lockup (CPU spinning without scheduling) or hard lockup (CPU with IRQs disabled). In BSP driver development, a common mistake is performing long operations or waiting in `probe()` — this blocks the udevd worker thread that called probe, and eventually triggers a hung task warning. The fix is to use kernel threads or workqueues for any long-running work, ensuring probe returns quickly.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

@@ -124,12 +124,6 @@ compatible  name  reg  status
 
 ---
 
-## 🧠 Interview Explanation
-
-> The `reg` property in a Device Tree node describes the physical memory address and size of a device's register space. When a driver calls `platform_get_resource(pdev, IORESOURCE_MEM, 0)`, the kernel translates the `reg` property from the DTS into a `struct resource` and returns it. If the `reg` property is missing, `platform_get_resource()` returns NULL. A well-written driver checks for this and returns `-EINVAL`, causing probe to fail with `error -22`. The fix is to add the correct `reg` property matching the device's actual hardware address range. This is different from a compatible mismatch or disabled node — in those cases probe is never called at all, but here probe is called and fails midway.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

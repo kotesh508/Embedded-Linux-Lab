@@ -139,12 +139,6 @@ After fix — with matching DTS node:
 
 ---
 
-## 🧠 Interview Explanation
-
-A compatible string mismatch is the most silent failure in Linux driver development — the module loads, the driver registers, but probe() is never called and no error is printed. The kernel simply skips any device whose DTS compatible string does not exactly match the driver's of_match_table entry, character by character. Diagnosis: check `/sys/bus/platform/drivers/<driver>/` for a device symlink — if only bind/unbind/uevent/module are present, the driver is unbound. Fix: compare the compatible strings character by character and ensure exact match.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

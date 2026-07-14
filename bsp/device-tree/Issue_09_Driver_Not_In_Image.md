@@ -129,12 +129,6 @@ ls /sys/bus/platform/drivers/ | grep kotesh_of
 
 ---
 
-## 🧠 Interview Explanation
-
-> In embedded Linux, the DTS describes the hardware and the kernel uses it to create platform devices at boot. However, just having a DTS node does not guarantee the driver will run — the driver module must also be present in the rootfs. In Yocto, this requires the driver recipe to be added to `IMAGE_INSTALL` in the image recipe or bbappend. If this is missing, the kernel creates the platform device but no driver ever loads. The result is a completely silent failure — no error messages, no dmesg output. Diagnosis involves checking `/lib/modules/` for the `.ko` file, checking `/sys/bus/platform/drivers/` for driver registration, and verifying the image bbappend has the correct `IMAGE_INSTALL` entry.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

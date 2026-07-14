@@ -109,12 +109,6 @@ root@qemuarm64:~# dmesg | grep MY_DUMMY
 
 ---
 
-## 🧠 Interview Explanation
-
-> The Linux kernel matches a Device Tree node to a platform driver using the `compatible` string. The kernel walks the `of_match_table` in the driver and compares each entry against the `compatible` property in the DTS node using an **exact string match**. If there is any mismatch — even a hyphen vs underscore — the driver's `probe()` function is never called. The fix is to ensure the `compatible` string is byte-for-byte identical in both the DTS node and the driver's `of_device_id` table. Convention is `"vendor,device"` in lowercase with no spaces.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

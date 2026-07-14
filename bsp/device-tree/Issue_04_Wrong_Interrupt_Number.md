@@ -111,12 +111,6 @@ dtc -I dts -O dtb -o /home/kotesh/dtstest/kotesh-test.dtb \
 
 ---
 
-## 🧠 Interview Explanation
-
-> Each interrupt line on a GIC can only be owned by one device unless `IRQF_SHARED` is used. In the Device Tree, the `interrupts` property specifies the interrupt type, number, and trigger mode. For ARM GIC, SPI interrupts map to Linux IRQ numbers as `SPI + 32`. If the DTS assigns an SPI number that is already claimed by another device (like `arch_timer` on SPI 3), `devm_request_irq()` returns `-EBUSY`, probe fails with `Resource temporarily unavailable`. The fix is to check `/proc/interrupts` on a running system to identify free interrupt lines and assign one to the new device.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

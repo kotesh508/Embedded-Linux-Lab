@@ -135,12 +135,6 @@ clock-names  clocks  compatible  name  reg  status
 
 ---
 
-## 🧠 Interview Explanation
-
-> The `clocks` property in a DTS node specifies which clock provider the device uses, referenced by phandle. The `clock-names` property gives each clock a name so the driver can request it by name using `devm_clk_get(&pdev->dev, "name")`. When the `clocks` property is missing, `devm_clk_get()` returns `-ENOENT` (error -2) because the kernel cannot find any clock registered for that device. This is a common issue in BSP bring-up when porting a driver to a new board — the driver works on the reference board but fails on the custom board because the custom DTS is missing the clock binding. The fix is to identify the correct clock provider phandle from the DTS and add the `clocks` and `clock-names` properties to the device node.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

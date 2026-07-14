@@ -139,12 +139,6 @@ dev->threshold = 100;
 
 ---
 
-## 🧠 Interview Explanation
-
-The kernel module declared a struct pointer as a global variable but never allocated memory for it. In C, uninitialized global pointers default to NULL (0x0). When `my_init()` tried to write to `dev->value`, the CPU raised a page fault at address 0x0. Unlike user space where only the process gets SIGSEGV, in kernel space there is no higher authority to catch the fault — the kernel generates an Oops and kills the faulting context. The fix is to always allocate memory with `kmalloc` before using a pointer, and always check the return value for NULL.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

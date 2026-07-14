@@ -128,12 +128,6 @@ compatible  name  reg  status  vcc-supply
 
 ---
 
-## 🧠 Interview Explanation
-
-> The `vcc-supply` property in a DTS node specifies which voltage regulator powers the device, referenced by phandle. The driver requests this regulator using `devm_regulator_get()` or `devm_regulator_get_optional()`. A critical difference: `devm_regulator_get()` silently returns a dummy regulator when the supply is missing — probe succeeds but the device may behave incorrectly at runtime. `devm_regulator_get_optional()` returns `-ENODEV` when the supply is missing, making the failure visible. This is a common BSP issue — the driver works on the reference platform but silently fails on a custom board with missing regulator bindings. Always use `devm_regulator_get_optional()` for supplies that are truly optional, and `devm_regulator_get()` only for mandatory supplies where you want a dummy fallback.
-
----
-
 ## 📁 Related Files
 
 | File | Path |

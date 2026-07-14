@@ -180,12 +180,6 @@ Note: `devm_kmalloc` will be used starting from Ch02 when we add `platform_drive
 
 ---
 
-## 🧠 Interview Explanation
-
-`devm_kmalloc` is device-managed memory allocation — the kernel automatically frees it when the device is removed or when `probe()` fails, even if the driver's `remove()` function is never called. This eliminates memory leaks in error paths where `kfree` might be accidentally skipped. The rule of thumb: use `kmalloc` for simple standalone modules, use `devm_kzalloc` for all platform drivers with `probe/remove`.
-
----
-
 ## 📁 Related Files
 
 | File | Path |
