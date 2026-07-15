@@ -1,0 +1,360 @@
+diff --git a/README b/README
+index 669ac7c32..3a5968c26 100644
+--- a/README
++++ b/README
+@@ -16,3 +16,90 @@ several of them using the Restructured Text markup notation.
+ Please read the Documentation/process/changes.rst file, as it contains the
+ requirements for building and running the kernel, and information about
+ the problems which may result by upgrading your kernel.
++
++
++buildsteps arch64
++------------------
++ARCH=arm64 CRASS_COMPILE=linux-gnu- make defconfig
++
++ARCH=arm64 CRASS_COMPILE=aarch64-linux-gnu- make j8
++ 
++Make file:
++
++~/qemu-10.1.0/buildroot-2025.08-rc3/configs/qemu_aarch64_full_defconfig
++
++
++with this content:
++
++# Architecture
++BR2_aarch64=y
++
++# Toolchain
++BR2_TOOLCHAIN_BUILDROOT_GLIBC=y
++
++# System
++BR2_TARGET_GENERIC_HOSTNAME="qemu-aarch64"
++BR2_TARGET_GENERIC_ISSUE="Welcome to QEMU AARCH64 Buildroot"
++BR2_TARGET_GENERIC_GETTY_PORT="ttyAMA0"
++BR2_ROOTFS_DEVICE_CREATION_DYNAMIC_EUDEV=y
++
++# Filesystem
++BR2_TARGET_ROOTFS_EXT2=y
++BR2_TARGET_ROOTFS_EXT2_4=y
++BR2_TARGET_ROOTFS_EXT2_SIZE="512M"
++BR2_TARGET_ROOTFS_EXT2_GENERATE=y
++BR2_TARGET_ROOTFS_TAR_GZIP=y
++
++# Busybox (all common utils)
++BR2_PACKAGE_BUSYBOX_SHOW_OTHERS=y
++
++# Networking
++BR2_PACKAGE_DHCP=y
++BR2_PACKAGE_DHCPCD=y
++BR2_PACKAGE_IPROUTE2=y
++BR2_PACKAGE_IPUTILS=y
++BR2_PACKAGE_NETCAT_OPENBSD=y
++BR2_PACKAGE_WGET=y
++BR2_PACKAGE_CURL=y
++BR2_PACKAGE_DROPBEAR=y   # SSH server
++
++# Debugging & monitoring
++BR2_PACKAGE_HTOP=y
++BR2_PACKAGE_STRACE=y
++BR2_PACKAGE_GDB=y
++
++# Text editors
++BR2_PACKAGE_NANO=y
++BR2_PACKAGE_VIM=y
++
++2. Apply and build
++cd ~/qemu-10.1.0/buildroot-2025.08-rc3
++
++make qemu_aarch64_full_defconfig
++make clean
++make -j$(nproc)
++
++3. After build, you’ll get:
++
++Kernel + rootfs at:
++output/images/rootfs.ext2
++output/images/Image (kernel)
++output/images/qemu_aarch64_full_defconfig
++
++A 512MB ext2 rootfs with:
++
++Busybox full set
++
++SSH server (dropbear)
++
++Networking (DHCP, curl, wget, iproute2, netcat, iputils)
++
++Debug tools (htop, strace, gdb)
++
++Editors (vim, nano)
++
++run qemu fron the path
++-----------------------
++~/qemu-10.1.0/buildroot-2025.08-rc3/output/images/start.sh
++
++qemu quit : better and safe use:poweroff (or )ctrl + A + C then quit
+diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+index 4cc1ac7f7..032a553f4 100644
+--- a/drivers/firmware/xilinx/zynqmp.c
++++ b/drivers/firmware/xilinx/zynqmp.c
+@@ -1989,6 +1989,17 @@ static int zynqmp_firmware_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "failed to add MFD devices %d\n", ret);
+ 		return ret;
+ 	}
++	
++	/* =================================================================== */
++        /* KOTESH REAL-TIME CORRUPTION & PRINT TEST LINK */
++        /* =================================================================== */
++        pr_info("KOTESH_DEBUG: [MILESTONE] MFD devices added successfully!\n");
++        pr_info("KOTESH_DEBUG: [CORRUPTION] Forcing a Null-Pointer Dereference now...\n");
++
++        int *corrupt_ptr = NULL;
++        *corrupt_ptr = 0xDEADBEEF; /* This line crashes the kernel right here */
++        /* =================================================================== */
++
+ 
+ 	zynqmp_pm_api_debugfs_init();
+ 
+@@ -2026,7 +2037,12 @@ static int zynqmp_firmware_remove(struct platform_device *pdev)
+ static const struct of_device_id zynqmp_firmware_of_match[] = {
+ 	{.compatible = "xlnx,zynqmp-firmware"},
+ 	{.compatible = "xlnx,versal-firmware"},
+-	{},
++	/* =================================================================== */
++        /* KOTESH SENIOR BUS LINK TEST: Force match with QEMU virtual device  */
++        /* =================================================================== */
++        { .compatible = "arm,pl061", }, 
++        /* =================================================================== */
++        { /* end of table */ },
+ };
+ MODULE_DEVICE_TABLE(of, zynqmp_firmware_of_match);
+ 
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index cadd4a820..d699237b4 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -562,6 +562,12 @@ config TPS6594_PFSM
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called tps6594-pfsm.
+ 
++
++config MY_BSP_DRIVER
++    	tristate "My Custom BSP Driver"
++    	help
++      	  This is a custom driver for my BSP development project.
++
+ source "drivers/misc/c2port/Kconfig"
+ source "drivers/misc/eeprom/Kconfig"
+ source "drivers/misc/cb710/Kconfig"
+diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+index f2a4d1ff6..57e06e563 100644
+--- a/drivers/misc/Makefile
++++ b/drivers/misc/Makefile
+@@ -67,3 +67,4 @@ obj-$(CONFIG_TMR_MANAGER)      += xilinx_tmr_manager.o
+ obj-$(CONFIG_TMR_INJECT)	+= xilinx_tmr_inject.o
+ obj-$(CONFIG_TPS6594_ESM)	+= tps6594-esm.o
+ obj-$(CONFIG_TPS6594_PFSM)	+= tps6594-pfsm.o
++obj-y += kotesh-labs/
+diff --git a/drivers/rtc/rtc-pl031.c b/drivers/rtc/rtc-pl031.c
+index bad6a5d9c..a17c6ce07 100644
+--- a/drivers/rtc/rtc-pl031.c
++++ b/drivers/rtc/rtc-pl031.c
+@@ -246,6 +246,19 @@ static int pl031_read_time(struct device *dev, struct rtc_time *tm)
+ 
+ 	rtc_time64_to_tm(readl(ldata->base + RTC_DR), tm);
+ 
++	
++	//REAL TIME BUG 1 TO CHANGE THE RTC CLOCK READ TIME 
++	unsigned long val;
++
++	//....KOTESH_BUG_INGECTED..//
++	//
++	//val of bug injected read side 
++	
++        
++       	// val =  0XFFFFFFFF;
++	val = readl(ldata->base + RTC_DR);
++	//calling value from qemu_side 
++	rtc_time64_to_tm(val, tm); 
+ 	return 0;
+ }
+ 
+diff --git a/init/do_mounts.c b/init/do_mounts.c
+index 21d065a55..f05de94ac 100644
+--- a/init/do_mounts.c
++++ b/init/do_mounts.c
+@@ -375,7 +375,9 @@ static void __init mount_block_root(char *root_device_name)
+ 
+ 	if (err < 0)
+ 		pr_emerg("Failed to create /dev/root: %d\n", err);
+-	mount_root_generic("/dev/root", root_device_name, root_mountflags);
++	/* BSP_LAB_FAULT: boot_02_vfs_mount_panic — mount nonexistent block dev */
++	pr_emerg("BSP_LAB boot_02: forcing mount failure on /dev/broken_root\n");
++	mount_root_generic("/dev/broken_root", root_device_name, root_mountflags);
+ }
+ #else
+ static inline void mount_block_root(char *root_device_name)
+diff --git a/init/main.c b/init/main.c
+index c787e94cc..985c88e41 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -111,6 +111,7 @@
+ #include <trace/events/initcall.h>
+ 
+ #include <kunit/test.h>
++#include <linux/skr_debug.h>
+ 
+ static int kernel_init(void *);
+ 
+@@ -485,6 +486,22 @@ static int __init warn_bootconfig(char *str)
+ 
+ early_param("bootconfig", warn_bootconfig);
+ 
++
++	/* --- SECURITY LAB: Early Tamper Check (SAFE MODE) --- */
++	static int __init tamper_check_handler(char *str)
++	{
++        // Use printk directly with KERN_ALERT to ensure it's high priority
++        printk(KERN_ALERT "SECURITY: Tamper verification flag detected! (SAFE MODE)\n");
++	LAB_INFO("SECURITY", "SEC004",
++         "SECURITY: Tamper verification flag detected! (SAFE MODE)\n");
++
++        // Do NOT panic yet. Just return.
++        return 0;
++	}
++	early_param("tamper_verify", tamper_check_handler);
++	/* --- End Security Lab --- */
++
++
+ /* Change NUL term back to "=", to make "param" the whole string. */
+ static void __init repair_env_string(char *param, char *val)
+ {
+@@ -878,6 +895,44 @@ void start_kernel(void)
+ 	char *command_line;
+ 	char *after_dashes;
+ 
++	/* --- SECURITY INJECTION START --- */
++
++	// Simulate a signature check
++	// We will check a specific memory location that we know is corrupted in the tampered version
++	// For this lab, we will just panic if we detect a "tamper flag"
++
++	// Let's add a simple hardcoded check
++	if (1) { // Always run this check
++   	 printk(KERN_ALERT "SECURITY: Verifying kernel signature... ");
++	
++	/* --- SECURITY INJECTION START --- */
++
++	 LAB_INFO("SECURITY", "SEC001",
++         "Verifying kernel signature...\n");
++    	// Simulate failure: If we are running the tampered image (we can't detect it easily without real crypto)
++    	// Instead, let's force a panic if the kernel is booted with a specific flag
++    	// But for this lab, let's just verify the "Magic Number" of our tampered file
++    
++    	// We will check if the first 4 bytes of the image (which we corrupted) are 0
++    	// This is a very basic simulation of a signature check
++    	// In reality, this would be done in the bootloader (UEFI/ATF)
++    
++    	printk(KERN_ALERT "FAIL: Signature mismatch!\n");
++	/* Simulate signature failure */
++
++	LAB_ERR("SECURITY", "SEC002",
++        "Signature mismatch detected\n");
++    	panic("Kernel image integrity check failed!\n");
++	}
++	/* --- SECURITY INJECTION END --- */
++
++
++
++
++
++
++
++
+ 	set_task_stack_end_magic(&init_task);
+ 	smp_setup_processor_id();
+ 	debug_objects_early_init();
+@@ -913,6 +968,20 @@ void start_kernel(void)
+ 				  __stop___param - __start___param,
+ 				  -1, -1, NULL, &unknown_bootoption);
+ 	print_unknown_bootoptions();
++
++	        /* --- SECURITY LAB: Tamper Check --- */
++        // Check if "tamper_verify" exists in the command line
++        if (strstr(saved_command_line, "tamper_verify")) {
++                pr_alert("SECURITY: Tamper verification flag detected!\n");
++
++		LAB_INFO("SECURITY", "SEC003",
++         "Tamper verification flag detected!...\n");
++                // Simulate a security failure
++                panic("SECURITY: Kernel integrity check FAILED! Tamper detected.\n");
++        }
++        /* --- End Security Lab --- */
++
++
+ 	if (!IS_ERR_OR_NULL(after_dashes))
+ 		parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
+ 			   NULL, set_init_arg);
+diff --git a/kernel/power/main.c b/kernel/power/main.c
+index f6425ae3e..24beb56bb 100644
+--- a/kernel/power/main.c
++++ b/kernel/power/main.c
+@@ -640,6 +640,8 @@ struct kobject *power_kobj;
+ static ssize_t state_show(struct kobject *kobj, struct kobj_attribute *attr,
+ 			  char *buf)
+ {
++	// High-priority print bypasses standard log level filters
++    printk(KERN_ERR "\n[KOTESH_DEBUG] User space read /sys/power/state!\n");
+ 	char *s = buf;
+ #ifdef CONFIG_SUSPEND
+ 	suspend_state_t i;
+@@ -987,8 +989,13 @@ static int __init pm_start_workqueue(void)
+ 	return pm_wq ? 0 : -ENOMEM;
+ }
+ 
+-static int __init pm_init(void)
++/* static int __init pm_init(void)
+ {
++	int error;
++
++	// Correct Placement: Put executable prints inside the function body
++        pr_info("KOTESH_DEBUG: Power Management Subsystem Initializing...\n");
++
+ 	int error = pm_start_workqueue();
+ 	if (error)
+ 		return error;
+@@ -1004,5 +1011,34 @@ static int __init pm_init(void)
+ 	pm_print_times_init();
+ 	return pm_autosleep_init();
+ }
++core_initcall(pm_initi); */
++static int __init pm_init(void)
++{
++        int error;
++
++        // 1. Custom debug log placed safely at the start of the function body
++        pr_info("KOTESH_DEBUG: Power Management Subsystem Initializing...\n");
++
++        // 2. Fixed: Removed the duplicate 'int' keyword here
++        error = pm_start_workqueue();
++        if (error)
++                return error;
++
++        hibernate_image_size_init();
++        hibernate_reserved_size_init();
++        pm_states_init();
++
++        power_kobj = kobject_create_and_add("power", NULL);
++        if (!power_kobj)
++                return -ENOMEM;
++
++        error = sysfs_create_groups(power_kobj, attr_groups);
++        if (error)
++                return error;
++
++        pm_print_times_init();
++        return pm_autosleep_init();
++}
+ 
++// 3. Fixed: Removed the trailing 'i' from pm_initi to match the function name
+ core_initcall(pm_init);
