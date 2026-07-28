@@ -12,7 +12,11 @@
 
 # Logs
 *.log
+# Private scripts
+scripts/
 
+# Private QEMU scripts
+qemu/scripts/
 # Build directories
 build/
 tmp/
