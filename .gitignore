@@ -20,7 +20,14 @@ downloads/
 deploy/
 
 # Editor
-.vscode/
+.vscode Yocto
+#yocto/poky/build/
+tmp/
+sstate-cache/
+
+# QEMU generated files
+*.img
+*.qcow2/
 .idea/
 
 # Cache
